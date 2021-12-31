@@ -1,7 +1,7 @@
 # Dart dynamic_form_state
 
 ![Pub Version](https://img.shields.io/pub/v/dynamic_form_state)
-![Master](https://github.com/anovis/dynamic_form_state/workflows/Dart%20CI/badge.svg?branch=master)
+![Master](https://github.com/anovis/dynamic_form_state/workflows/Dart%20CI/badge.svg?branch=main)
 
 **dynamic_form_state** makes it easy to manage a changing widget state with many different types of values, for example a large input form. Initalize dynamic_form_state with
 any number of dynamic values with default values and access both its setState and values with ease.
@@ -17,21 +17,41 @@ dependencies:
 
 ## Usage
 
-It is possible to add spatial based values to the tree with a geohash or directly with lat lng coordinates.
+Initialize your dynamic_form_state in your stateful widget's initState, passing in desired default values. 
 
-``` dart
-import 'package:geohashtree/geohashtree.dart';
-
-GeohashTree<String> tree = GeohashTree<String>(); 
-tree.add("6g3mc", "iguazu"); 
-tree.addLatLng(-25.686667, -54.444722, "also iguazu");
+```dart
+  @override
+  void initState() {
+    super.initState();
+    formState = DynamicFormState([
+      DynamicValue("value", false),
+      DynamicValue("text", TextEditingController()),
+      DynamicValue("custom", {"key1": "value1", "key2": "value2"})
+    ])
+      ..initialize(setState);
 ```
 
-To get all the coordinates in a tree within a radius of `5000` meters from the point `25.6953° S, 54.4367° W`  use `getGeohashesByProximity()`. The `precision` parameter dictates how specific the geohash match should be. Precision 5 return matches of geohash of length 5, which in this case would be all geohashes that start with "6g3mc". Precision 1 return matches of geohash of length 1, which in this case would be all geohashes that start with "6".
+Pass in a stateful value and default onChange function into various components using dynamic_form_states getters. For more complex use cases you can 
+use the onChange function inside of your own functions. See `CustomWidget` in the example. 
 
-``` dart
-List<String> values = tree.getGeohashesByProximity(-25.686667, -54.444722,5000, precision: 9);
+```dart
+Radio(
+    value: formState.get("value"),
+    groupValue: formState.get("value"),
+    onChanged: formState.getOnChange("value")
+)
+
+TextField(controller: formState.get("text"))
+
+CustomWidget(formState.get("custom"), (key, value) {
+  Map<String, bool> items = formState.get("custom");
+  items[key] = value;
+  var onChange = formState.getOnChange("custom");
+  onChange(items);
+})
 ```
+
+
 
 ## Issues
 
