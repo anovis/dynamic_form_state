@@ -1,7 +1,6 @@
 # Dart dynamic_form_state
 
 ![Pub Version](https://img.shields.io/pub/v/dynamic_form_state)
-![Master](https://github.com/anovis/dynamic_form_state/workflows/Dart%20CI/badge.svg?branch=main)
 
 **dynamic_form_state** makes it easy to manage a changing widget state with many different types of values, for example a large input form. Initalize dynamic_form_state with
 any number of dynamic values with default values and access both its setState and values with ease.
